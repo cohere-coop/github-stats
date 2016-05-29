@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+options = {}
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: github-stats [options] <search-string>'
+  opts.on('-h', '--help', 'Prints help') do
+    puts opts
+    exit
+  end
+
+  opts.on('--setup-db', TrueClass, 'Creates the database') do |setup_db|
+    options[:setup_db] = setup_db
+  end
+
+  opts.on('-d', '--database-url DATABASE_URL', 'which database to use') do |database_url|
+    puts "wat"
+    options[:database_url] = database_url
+  end
+
+  opts.on('--github-access-token ACCESS_TOKEN', 'Use a github access token for great private repo access/etc.') do |access_token|
+    options[:github_access_token] = access_token
+  end
+
+  opts.on('--[no-]ingest', 'Whether or not to ingest data or to rely on the databases state') do |ingest|
+    options[:ingest] = ingest
+  end
+
+  opts.on('-r REPORT_TYPE', '--report REPORT_TYPE', 'Defaults to closed_by_week') do |report_type|
+    options[:report_type] = report_type
+  end
+end.parse!
+
+require_relative '../lib/github_stats'
+
+puts GithubStats::CLI.run(ARGV, options)
