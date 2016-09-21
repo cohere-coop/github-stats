@@ -30,8 +30,10 @@ module GithubStats
       adapter.create_table :issues do
         primary_key :id
         String :url
+        String :repo
         String :search_string
         Integer :github_id
+        Integer :number
         DateTime :closed_at
         DateTime :created_at
         DateTime :started_at
@@ -44,6 +46,16 @@ module GithubStats
         foreign_key :issue_id, :issues, on_delete: :cascade
         DateTime :created_at
         String :type
+      end
+    end
+
+    private def create_stages
+      adapter.create_table :stages do
+        primary_key :id
+        Integer :issue_id
+        String :name
+        DateTime :entered_at
+        DateTime :left_at
       end
     end
 

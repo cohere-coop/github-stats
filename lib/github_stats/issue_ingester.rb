@@ -27,9 +27,14 @@ module GithubStats
     end
 
     private def insert(result)
-      issues.insert(search_string: search_string, github_id: result[:id],
+      repo = URI.parse(result[:repository_url]).path.gsub('/repos/', '')
+      result[:number]
+      issues.insert(search_string: search_string,
+                    github_id: result[:id],
                     closed_at: result[:closed_at],
                     created_at: result[:created_at],
+                    number: result[:number],
+                    repo: repo,
                     url: result[:url])
     end
 

@@ -14,6 +14,9 @@ module GithubStats
       Response.new(self)
     end
 
+    def issue_events(issue, options = { per_page: 100 })
+    end
+
     def last_response
       octokit.last_response
     end
