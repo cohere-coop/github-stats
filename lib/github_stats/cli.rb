@@ -38,7 +38,7 @@ module GithubStats
     end
 
     private def report
-      results = ClosedByWeekReport.new(search_string, options).results
+      results = Reports.for(options[:report_type]).new(search_string, options).results
       SpaceSeperatedLinePerResultResultsView.new(results)
     end
 
