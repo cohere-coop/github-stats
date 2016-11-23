@@ -19,7 +19,7 @@ module GithubStats
     def run
       setup_db
       ingest
-      report
+      results
     end
 
     private def setup_db
@@ -38,13 +38,16 @@ module GithubStats
     end
 
     private def report
-      results = Reports.for(options[:report_type]).new(search_string, options).results
-      SpaceSeperatedLinePerResultResultsView.new(results)
+      Reports.for(options[:report_type]).new(search_string, options)
+    end
+
+    private def results
+      CommaSeperatedLinePerResultResultsView.new(report.results)
     end
 
     # Transforms a result set into a space-seperated table the results hash
     # keys becoming the table headers and line breaks between rows.
-    class SpaceSeperatedLinePerResultResultsView
+    class CommaSeperatedLinePerResultResultsView
       attr_accessor :results
       def initialize(results)
         self.results = results
@@ -55,8 +58,8 @@ module GithubStats
       end
 
       def to_s
-        fields.join(' ') + "\n" + results.map do |result|
-          fields.map(&result.method(:fetch)).join(' ')
+        fields.join(',') + "\n" + results.map do |result|
+          fields.map(&result.method(:fetch)).join(',')
         end.join("\n")
       end
     end

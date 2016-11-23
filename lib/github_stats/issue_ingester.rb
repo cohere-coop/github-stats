@@ -11,25 +11,37 @@ module GithubStats
 
     def ingest
       return unless options[:ingest]
-      github.search_issues(search_string).each(&method(:insert_or_update))
+      github.search_issues(search_string).items.each(&method(:insert_or_update))
     end
 
     private def insert_or_update(result)
       issue = issues.first(github_id: result[:id])
-      return insert(result) unless issue
-      return update(issue, result) if issue[:closed_at] != result[:closed_at] ||
-                                      issue[:created_at] != result[:created_at]
+      started_at = started_at(result)
+      return insert(result, started_at: started_at) unless issue
+      return update(issue, result, started_at: started_at) if issue[:closed_at] != result[:closed_at] ||
+                                                              issue[:created_at] != result[:created_at] ||
+                                                              issue[:started_at] != started_at
     end
 
-    private def update(issue, result)
+    private def started_at(result)
+      starting_event = result.rels[:events].get.data.find do |event|
+        next unless event[:event] == 'labeled'
+        (event[:label] || {})[:name] == 'in-progress'
+      end
+      starting_event.nil? ? nil : starting_event[:created_at]
+    end
+
+    private def update(issue, result, started_at:)
       issue.update(closed_at: result[:closed_at],
-                   created_at: result[:created_at])
+                   created_at: result[:created_at],
+                   started_at: started_at)
     end
 
-    private def insert(result)
+    private def insert(result, started_at:)
       issues.insert(search_string: search_string, github_id: result[:id],
                     closed_at: result[:closed_at],
                     created_at: result[:created_at],
+                    started_at: started_at,
                     url: result[:url])
     end
 
