@@ -24,7 +24,7 @@ module GithubStats
         return hours_between.to_f / 24.to_f if hours_between < 12
         days_between = (end_time.strftime('%j').to_i - start_time.strftime('%j').to_i)
         weeks_between = (end_time.strftime('%W').to_i - start_time.strftime('%W').to_i)
-        return (hours_between - (days_between * 10 + weeks_between * 48)).to_f / 24.to_f
+        return (hours_between - (days_between * 10 + weeks_between * 28)).to_f / 24.to_f
       end
 
       private def issues
