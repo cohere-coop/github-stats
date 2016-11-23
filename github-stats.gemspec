@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name                  = 'github-stats'
-  s.version               = '0.1.0'
+  s.version               = '0.2.0'
   s.licenses              = ['MIT']
   s.summary               = 'Project-management oriented stats for github'
   s.description           = 'Throughput, cycle time, velocity, etc'

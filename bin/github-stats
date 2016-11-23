@@ -28,7 +28,7 @@ OptionParser.new do |opts|
     options[:ingest] = ingest
   end
 
-  opts.on('-r REPORT_TYPE', '--report REPORT_TYPE', 'Defaults to closed_by_week') do |report_type|
+  opts.on('-r REPORT_TYPE', '--report REPORT_TYPE', 'Default is closed_by_week; may be cycle_time, closed_by_week, or created_by_week') do |report_type|
     options[:report_type] = report_type
   end
 end.parse!
