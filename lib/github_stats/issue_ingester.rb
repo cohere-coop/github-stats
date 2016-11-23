@@ -24,10 +24,12 @@ module GithubStats
     end
 
     private def started_at(result)
-      starting_event = result.rels[:events].get.data.find do |event|
-        next unless event[:event] == 'labeled'
-        (event[:label] || {})[:name] == 'in-progress'
+      starting_events = result.rels[:events].get.data.select do |event|
+        event[:event] == 'labeled' &&  (event[:label] || {})[:name] == 'in-progress'
+      end.sort_by do |event|
+        event[:created_at]
       end
+      starting_event = starting_events.last
       starting_event.nil? ? nil : starting_event[:created_at]
     end
 
