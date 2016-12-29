@@ -11,7 +11,7 @@ module GithubStats
     def initialize(remaining_args, options)
       @search_string = remaining_args.join(' ')
       options[:database_url] ||= "sqlite://#{home_dir}/db.sqlite"
-      options[:report_type] ||= 'issues_closed_by_week'
+      options[:report_type] ||= 'closed_by_week'
       options[:ingest] = true unless options.key?(:ingest)
       @options = options
     end
